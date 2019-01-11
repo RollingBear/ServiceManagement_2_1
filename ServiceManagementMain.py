@@ -27,7 +27,9 @@ LOG_LIST = "日志目录"
 RE_FRESH_STATE = "刷新状态"
 
 SERVICE_NOT_INSTALL = "服务未安装"
-
+STATE_RUNNING = "已启动"
+STATE_STOPPED = "未启动"
+STATE_UNINSTALLED = "未安装"
 
 BLANK_1 = " "
 BLANK_2 = "  "
@@ -146,15 +148,15 @@ def ServiceState(tk, count, column, columnspan, ServiceName):
     FLAG = ServiceOpt.getServiceState(ServiceName)
     if FLAG == 1:
         printPNG(GREEN, count, column, columnspan)
-        printLabel(tk, "已启动", count, column + 1, columnspan)
+        printLabel(tk, STATE_RUNNING, count, column + 1, columnspan)
         return True
     elif FLAG == 0:
         printPNG(RED, count, column, columnspan)
-        printLabel(tk, "未启动", count, column + 1, columnspan)
+        printLabel(tk, STATE_STOPPED, count, column + 1, columnspan)
         return True
     elif FLAG == -1:
         printPNG(YELLOW, count, column, columnspan)
-        printLabel(tk, "未安装", count, column + 1, columnspan)
+        printLabel(tk, STATE_UNINSTALLED, count, column + 1, columnspan)
         return False
 
 
