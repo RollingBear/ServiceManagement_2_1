@@ -93,10 +93,10 @@ def printMenuButton(tk, text, mes, count, column):
 def printButton(tk, text, mes, row, column, columnspan):
     if text == START_ALL:
         btn = Button(tk, text=text, width=8, height=1, activeforeground="blue",
-                     command=lambda List=mes: ServiceAllStart(List))
+                     command=lambda tk = tk, List=mes: ServiceAllStart(tk, List))
     elif text == STOP_ALL:
         btn = Button(tk, text=text, width=8, height=1, activeforeground="blue",
-                     command=lambda List=mes: ServiceAllStop(List))
+                     command=lambda tk = tk, List=mes: ServiceAllStop(tk, List))
     elif text == LOG_LIST:
         btn = Button(tk, text=text, width=8, height=1, activeforeground="blue",
                      command=lambda: ServiceLogList())
@@ -125,16 +125,16 @@ def printLabel(tk, mes, row, column, columnspan, sticky=W):
 '''按钮服务'''
 
 
-def ServiceAllStart(ServiceNameList):
+def ServiceAllStart(tk, ServiceNameList):
     for count in range(int(len(ServiceNameList) / 2)):
         ServiceOpt.ServiceStart(ServiceNameList[int(count * 2)])
-        ServiceState(count, 3, 1, ServiceNameList[int(count * 2)])
+        ServiceState(tk, count, 3, 1, ServiceNameList[int(count * 2)])
 
 
-def ServiceAllStop(ServiceNameList):
+def ServiceAllStop(tk, ServiceNameList):
     for count in range(int(len(ServiceNameList) / 2)):
         ServiceOpt.ServiceStop(ServiceNameList[int(count * 2)])
-        ServiceState(count, 3, 1, ServiceNameList[int(count * 2)])
+        ServiceState(tk, count, 3, 1, ServiceNameList[int(count * 2)])
 
 
 def ServiceLogList():
