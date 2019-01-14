@@ -8,6 +8,7 @@ from tkinter import *
 import ServiceOpt
 import configparser
 import time
+import threading
 import _thread
 
 '''名称'''
@@ -163,6 +164,20 @@ def ServiceState(tk, count, column, columnspan, ServiceName):
 '''状态刷新'''
 
 
+def StateReFresh(tk, ServiceNameList):
+    for count in range(int(len(ServiceNameList) / 2)):
+        ServiceState(tk, count, 3, 1, ServiceNameList[int(count * 2)])
+
+
+def ReFreshThreading(tk, ServiceNameList, delay):
+    while True:
+        threading.Lock().acquire()
+        try:
+            StateReFresh(tk, ServiceNameList)
+        finally:
+            threading.Lock().release()
+        time.sleep(delay)
+
 def ReFreshThread(tk, ServiceNameList, delay):
     while True:
         for count in range(int(len(ServiceNameList) / 2)):
@@ -195,10 +210,8 @@ def start():
     printButton(myGui, STOP_ALL, ServiceNameList, int(len(ServiceNameList) / 2) + 2, 3, 1)
     printButton(myGui, LOG_LIST, None, int(len(ServiceNameList) / 2) + 2, 4, 1)
 
-    try:
-        _thread.start_new_thread(ReFreshThread, (myGui, ServiceNameList, 2))
-    except:
-        print('Thread start Error')
+    refreshThread = threading.Thread(target=ReFreshThreading, args=(myGui, ServiceNameList, 2))
+    refreshThread.start()
 
     myGui.update_idletasks()
 

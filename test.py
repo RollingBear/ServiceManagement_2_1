@@ -7,6 +7,8 @@
 import configparser
 import os
 import sys
+import time
+import threading
 
 # config = configparser.ConfigParser()
 # config.read("config.ini")
@@ -14,10 +16,10 @@ import sys
 # print(config.get("name", "ServiceName"))
 # print(config.get("name", "ServiceName").split(', '))
 
-Address = "Done\pack\pack"
-test = "..\..\..\pack"
-test2 = "..\..\pack"
-test3 = "..\pack"
+# Address = "Done\pack\pack"
+# test = "..\..\..\pack"
+# test2 = "..\..\pack"
+# test3 = "..\pack"
 
 # now = os.getcwd()
 # print(now)
@@ -27,15 +29,20 @@ test3 = "..\pack"
 # print(grand)
 # os.popen("start " + os.path.abspath(os.path.dirname(now)+os.path.sep+"..") + Address)
 
-print(test.count("..\\"))
-print(test2.count("..\\"))
-print(test3.count("..\\"))
-print(test.replace("..\\", ""))
-print("~" * test.count("..\\") + test.replace("..\\", ""))
-Address_test = "..\..\Done\pack\pack"
+# print(test.count("..\\"))
+# print(test2.count("..\\"))
+# print(test3.count("..\\"))
+# print(test.replace("..\\", ""))
+# print("~" * test.count("..\\") + test.replace("..\\", ""))
+# Address_test = "..\..\Done\pack\pack"
 
 # os.popen("start " + os.path.abspath(
 #     os.path.dirname(os.getcwd()) + os.path.sep + ("." * Address_test.count("..\\"))) + "\\" + Address_test.replace("..\\",
 #                                                                                                                  ""))
 
-os.popen("start " + os.path.abspath(Address_test))
+# os.popen("start " + os.path.abspath(Address_test))
+
+# try:
+#     _thread.start_new_thread(ReFreshThread, (myGui, ServiceNameList, 2))
+# except:
+#     print('Thread start Error')
