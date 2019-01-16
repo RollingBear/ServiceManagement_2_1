@@ -9,7 +9,6 @@ import ServiceOpt
 import configparser
 import time
 import threading
-import _thread
 
 '''名称'''
 START = "启动"
@@ -94,10 +93,10 @@ def printMenuButton(tk, text, mes, count, column):
 def printButton(tk, text, mes, row, column, columnspan):
     if text == START_ALL:
         btn = Button(tk, text=text, width=8, height=1, activeforeground="blue",
-                     command=lambda tk = tk, List=mes: ServiceAllStart(tk, List))
+                     command=lambda tk=tk, List=mes: ServiceAllStart(tk, List))
     elif text == STOP_ALL:
         btn = Button(tk, text=text, width=8, height=1, activeforeground="blue",
-                     command=lambda tk = tk, List=mes: ServiceAllStop(tk, List))
+                     command=lambda tk=tk, List=mes: ServiceAllStop(tk, List))
     elif text == LOG_LIST:
         btn = Button(tk, text=text, width=8, height=1, activeforeground="blue",
                      command=lambda: ServiceLogList())
@@ -171,12 +170,12 @@ def StateReFresh(tk, ServiceNameList):
 
 def ReFreshThreading(tk, ServiceNameList, delay):
     while True:
-        threading.Lock().acquire()
         try:
             StateReFresh(tk, ServiceNameList)
         finally:
-            threading.Lock().release()
+            print("run refresh")
         time.sleep(delay)
+
 
 def ReFreshThread(tk, ServiceNameList, delay):
     while True:
