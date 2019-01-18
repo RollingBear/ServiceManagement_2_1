@@ -33,7 +33,7 @@ BLANK_4 = "    "
 
 def start():
 
-    global myGui, ServiceNameList, GREEN, RED, YELLOW
+    # global myGui, ServiceNameList, GREEN, RED, YELLOW
 
     myGui = Tk(className="服务管理")
     myGui.withdraw()

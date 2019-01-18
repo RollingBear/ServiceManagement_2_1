@@ -70,6 +70,8 @@ def ServiceSetStartAuto(ServiceName, State):
 
 
 def ServiceDelete(ServiceName):
+    os.popen("sc stop " + ServiceName)
+    time.sleep(1)
     os.popen("sc delete " + ServiceName)
 
 
@@ -92,9 +94,17 @@ def openFile(LogAddress):
 
 def openSetup(SetupAddress, ServiceName):
     if ServiceName == 'Face_Nginx':
-        os.system("start " + SetupAddress + "\\" + ServiceName('Face_N', 'WinSW_n') + '.exe')
+        os.popen("sc create " + ServiceName + ' binPath="' + os.path.abspath(
+            os.path.dirname(os.getcwd()) + os.path.sep + (
+                    "." * SetupAddress.count("..\\"))) + "\\" + SetupAddress.replace("..\\",
+                                                                                     "") + "\\" + ServiceName(
+            'Face_N', 'WinSW_n') + '.exe"')
     else:
-        os.system("start " + SetupAddress + "\\" + ServiceName.replace('Face_', 'WinSW_') + 'Service.exe')
+        os.popen("sc create " + ServiceName + ' binPath="' + os.path.abspath(
+            os.path.dirname(os.getcwd()) + os.path.sep + (
+                    "." * SetupAddress.count("..\\"))) + "\\" + SetupAddress.replace("..\\",
+                                                                                     "") + "\\" + ServiceName.replace(
+            'Face_', 'WinSW_') + 'Service.exe"')
 
 
 '''弹窗'''
