@@ -81,7 +81,7 @@ def start():
     SetX = (myGui.winfo_screenwidth() - myGui.winfo_reqwidth()) / 2
     SetY = (myGui.winfo_screenheight() - myGui.winfo_reqheight()) / 2
     myGui.geometry("%dx%d+%d+%d" % (myGui.winfo_reqwidth() + 8, myGui.winfo_reqheight(), SetX, SetY))
-    # myGui.deiconify()
+    myGui.deiconify()
     myGui.mainloop()
 
 
