@@ -46,3 +46,26 @@ import threading
 #     _thread.start_new_thread(ReFreshThread, (myGui, ServiceNameList, 2))
 # except:
 #     print('Thread start Error')
+
+# ServiceName = 'Face_TrailsMerge'
+# print(ServiceName)
+# SetupName = ServiceName.replace('Face_', 'WinSW_')+'.exe'
+# print(SetupName)
+
+import LoadConfig
+
+file = open(LoadConfig.loadConfig("address", "NameListAddress"), encoding="utf-8-sig")
+ServiceNameList = []
+result = file.readlines()
+for count in range(len(result)):
+    result[count] = result[count].replace("\n", "")
+    result_1 = result[count].split(",")
+    ServiceNameList.append(result_1[0])
+    ServiceNameList.append(result_1[1])
+    if result_1[2] == '':
+        result_1[2].replace('', 'None')
+    ServiceNameList.append(result_1[2])
+print(ServiceNameList)
+
+for i in range(1, 10):
+    print(i)

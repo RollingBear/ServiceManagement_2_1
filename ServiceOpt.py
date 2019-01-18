@@ -2,7 +2,8 @@
 
 
 # 2019/1/3 0003 下午 3:19     
-# RollingBear
+
+__author__ = 'RollingBear'
 
 import os
 import time
@@ -65,6 +66,13 @@ def ServiceSetStartAuto(ServiceName, State):
     os.popen("sc config " + ServiceName + " start=" + State)
 
 
+'''删除服务'''
+
+
+def ServiceDelete(ServiceName):
+    os.popen("sc delete " + ServiceName)
+
+
 '''打开记事本'''
 
 
@@ -75,8 +83,15 @@ def openNoteByName(LogAddress, ServiceName):
 '''打开文件夹'''
 
 
-def openFile(Address):
-    os.popen("start " + os.path.abspath(Address))
+def openFile(LogAddress):
+    os.popen("start " + os.path.abspath(LogAddress))
+
+
+'''打开安装程序'''
+
+
+def openSetup(SetupAddress, ServiceName):
+    os.system("start " + SetupAddress + "\\" + ServiceName.replace('Face_', 'WinSW_') + '.exe')
 
 
 '''弹窗'''
