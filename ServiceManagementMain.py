@@ -14,37 +14,27 @@ import time
 import threading
 
 '''名称'''
-START = "启动"
 START_ALL = "全部启动"
-STOP = "停止"
 STOP_ALL = "全部停止"
-RE_START = "重启"
-SET_START_AUTO = "打开自启"
-SET_START_ALL_AUTO = "打开全部自启"
-SET_START_DEMAND = "关闭自启"
-SET_START_ALL_DEMAND = "关闭全部自启"
-SET_START_DISABLED = "禁用服务"
-SET_START_ALL_DISABLED = "禁用全部服务"
-LOG_FILE = "日志"
 LOG_LIST = "日志目录"
-RE_FRESH_STATE = "刷新状态"
-INSTALL_LIST = "安装目录"
-
-SERVICE_NOT_INSTALL = "服务未安装"
-STATE_RUNNING = "已启动"
-STATE_STOPPED = "未启动"
-STATE_UNINSTALLED = "未安装"
-
 BLANK_1 = " "
 BLANK_2 = "  "
 BLANK_3 = "   "
 BLANK_4 = "    "
 
+
+# def refresh_data():
+#     ServicePackage.StateReFresh(tk=myGui, ServiceNameList=ServiceNameList, GREEN=GREEN, RED=RED, YELLOW=YELLOW)
+#     myGui.after(2000, refresh_data)
+
+
 '''启动服务'''
 
 
 def start():
-    global GREEN, RED, YELLOW, LOGO
+
+    global myGui, ServiceNameList, GREEN, RED, YELLOW
+
     myGui = Tk(className="服务管理")
     myGui.withdraw()
     myGui.resizable(width=False, height=False)
@@ -56,9 +46,14 @@ def start():
     MESSAGE = PhotoImage(file=LoadConfig.loadConfig("address", "MessagePicAddress"))
     ServiceNameList = LoadConfig.loadNameList()
     LogListAddress = LoadConfig.loadConfig("address", "LogListAddress")
-    SetupAddress = LoadConfig.loadConfig("address", "SetupAddress")
+    InstallAddress = LoadConfig.loadConfig("address", "SetupAddress")
 
     for count in range(int(len(ServiceNameList) / 3)):
+        SetupAddress = InstallAddress
+        if ServiceNameList[count * 3] == 'Face_Nginx':
+            SetupAddress = LoadConfig.loadConfig("address", "NginxWebAddress")
+        elif ServiceNameList[count * 3] == 'Face_Mosquitto':
+            SetupAddress = LoadConfig.loadConfig("address", "MosquittoAddress")
         printComp.printMenuButton(myGui, ServiceNameList[int(count * 3 + 1)], ServiceNameList[int(count * 3)], count, 1,
                                   LogListAddress, ServiceNameList[int(count * 3 + 2)], SetupAddress)
 
@@ -70,7 +65,7 @@ def start():
     printComp.printButton(myGui, START_ALL, ServiceNameList, int(len(ServiceNameList) / 3) + 4, 2, 1, LogListAddress)
     printComp.printButton(myGui, STOP_ALL, ServiceNameList, int(len(ServiceNameList) / 3) + 4, 3, 1, LogListAddress)
     printComp.printButton(myGui, LOG_LIST, None, int(len(ServiceNameList) / 3) + 4, 4, 1, LogListAddress)
-    printComp.printButton(myGui, INSTALL_LIST, None, int(len(ServiceNameList) / 3) + 4, 5, 1, SetupAddress)
+    # printComp.printButton(myGui, INSTALL_LIST, None, int(len(ServiceNameList) / 3) + 4, 5, 1, SetupAddress)
 
     refreshThread = threading.Thread(target=ServicePackage.ReFreshThreading,
                                      args=(myGui, ServiceNameList, 2, GREEN, RED, YELLOW))

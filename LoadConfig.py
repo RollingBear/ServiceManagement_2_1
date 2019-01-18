@@ -15,12 +15,6 @@ def loadConfig(name, key):
 
     return config.get(name, key)
 
-    # LogListAddress = config.get("address", "LogListAddress")
-    # RedPicAddress = config.get("address", "RedPicAddress")
-    # GreenPicAddress = config.get("address", "GreenPicAddress")
-    # YellowPicAddress = config.get("address", "YellowPicAddress")
-    # LogoPicAddress = config.get("address", "LogoPicAddress")
-
 
 def loadNameList():
     file = open(loadConfig("address", "NameListAddress"), encoding="utf-8-sig")

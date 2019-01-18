@@ -10,9 +10,7 @@ import ServicePackage
 
 '''名称'''
 START = "启动"
-START_ALL = "全部启动"
 STOP = "停止"
-STOP_ALL = "全部停止"
 RE_START = "重启"
 SET_START_AUTO = "打开自启"
 SET_START_DEMAND = "关闭自启"
@@ -21,12 +19,10 @@ INSATLL = "安装服务"
 UNINSTALL = "卸载服务"
 LOG_FILE = "日志"
 LOG_LIST = "日志目录"
-INSTALL_LIST = "安装目录"
+START_ALL = "全部启动"
+STOP_ALL = "全部停止"
+LOG_LIST = "日志目录"
 
-SERVICE_NOT_INSTALL = "服务未安装"
-STATE_RUNNING = "已启动"
-STATE_STOPPED = "未启动"
-STATE_UNINSTALLED = "未安装"
 
 
 def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, SetupAddress):

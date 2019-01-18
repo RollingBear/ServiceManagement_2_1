@@ -12,22 +12,6 @@ import time
 import threading
 
 '''名称'''
-START = "启动"
-START_ALL = "全部启动"
-STOP = "停止"
-STOP_ALL = "全部停止"
-RE_START = "重启"
-SET_START_AUTO = "打开自启"
-SET_START_ALL_AUTO = "打开全部自启"
-SET_START_DEMAND = "关闭自启"
-SET_START_ALL_DEMAND = "关闭全部自启"
-SET_START_DISABLED = "禁用服务"
-SET_START_ALL_DISABLED = "禁用全部服务"
-LOG_FILE = "日志"
-LOG_LIST = "日志目录"
-RE_FRESH_STATE = "刷新状态"
-
-SERVICE_NOT_INSTALL = "服务未安装"
 STATE_RUNNING = "已启动"
 STATE_STOPPED = "未启动"
 STATE_UNINSTALLED = "未安装"

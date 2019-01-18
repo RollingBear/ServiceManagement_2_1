@@ -91,7 +91,10 @@ def openFile(LogAddress):
 
 
 def openSetup(SetupAddress, ServiceName):
-    os.system("start " + SetupAddress + "\\" + ServiceName.replace('Face_', 'WinSW_') + '.exe')
+    if ServiceName == 'Face_Nginx':
+        os.system("start " + SetupAddress + "\\" + ServiceName('Face_N', 'WinSW_n') + '.exe')
+    else:
+        os.system("start " + SetupAddress + "\\" + ServiceName.replace('Face_', 'WinSW_') + 'Service.exe')
 
 
 '''弹窗'''
