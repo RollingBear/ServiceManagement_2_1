@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 # 2019/1/3 0003 下午 3:19     
 
 __author__ = 'RollingBear'
@@ -28,14 +27,15 @@ def start():
     myGui.withdraw()
     myGui.resizable(width=False, height=False)
 
-    GREEN = PhotoImage(file=LoadConfig.loadConfig("address", "GreenPicAddress"))
-    RED = PhotoImage(file=LoadConfig.loadConfig("address", "RedPicAddress"))
-    YELLOW = PhotoImage(file=LoadConfig.loadConfig("address", "YellowPicAddress"))
-    LOGO = PhotoImage(file=LoadConfig.loadConfig("address", "LogoPicAddress"))
-    MESSAGE = PhotoImage(file=LoadConfig.loadConfig("address", "MessagePicAddress"))
+    GREEN = PhotoImage(file=LoadConfig.loadConfig("pic_address", "GreenPicAddress"))
+    RED = PhotoImage(file=LoadConfig.loadConfig("pic_address", "RedPicAddress"))
+    YELLOW = PhotoImage(file=LoadConfig.loadConfig("pic_address", "YellowPicAddress"))
+    LOGO = PhotoImage(file=LoadConfig.loadConfig("pic_address", "LogoPicAddress"))
+    MESSAGE = PhotoImage(file=LoadConfig.loadConfig("pic_address", "MessagePicAddress"))
+
     ServiceNameList = LoadConfig.loadNameList()
-    LogListAddress = LoadConfig.loadConfig("address", "LogListAddress")
-    InstallAddress = LoadConfig.loadConfig("address", "SetupAddress")
+    LogListAddress = LoadConfig.loadConfig("file_address", "LogListAddress")
+    InstallAddress = LoadConfig.loadConfig("file_address", "SetupAddress")
 
     # for count in range(int(len(ServiceNameList) / 3)):
     #     printComp.printMenuButton(myGui, ServiceNameList[int(count * 3 + 1)], ServiceNameList[int(count * 3)], count, 1,
@@ -51,9 +51,12 @@ def start():
     printComp.printButton(myGui, LOG_LIST, None, int(len(ServiceNameList) / 3) + 4, 4, 1, LogListAddress)
 
     refreshStateThread = threading.Thread(target=ServicePackage.ReFreshStateThreading,
-                                          args=(myGui, ServiceNameList, 2, GREEN, RED, YELLOW))
+                                          args=(myGui, ServiceNameList,
+                                                int(LoadConfig.loadConfig('time', 'StateReFreshTime')), GREEN, RED,
+                                                YELLOW))
     refreshBtnMThread = threading.Thread(
-        target=ServicePackage.ReFreshBtnMThreading, args=(myGui, ServiceNameList, LogListAddress, InstallAddress, 5))
+        target=ServicePackage.ReFreshBtnMThreading, args=(myGui, ServiceNameList, LogListAddress, InstallAddress,
+                                                          int(LoadConfig.loadConfig('time', 'ButtonReFreshTime'))))
 
     refreshStateThread.daemon = True
     refreshBtnMThread.daemon = True

@@ -17,7 +17,7 @@ RE_START = "重启"
 SET_START_AUTO = "打开自启"
 SET_START_DEMAND = "关闭自启"
 SET_START_DISABLED = "禁用服务"
-INSATLL = "安装服务"
+INSTALL = "安装服务"
 UNINSTALL = "卸载服务"
 LOG_FILE = "日志"
 LOG_LIST = "日志目录"
@@ -34,9 +34,9 @@ def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, InstallAd
     # 判断地址
     SetupAddress = InstallAddress
     if mes == 'Face_Nginx':
-        SetupAddress = LoadConfig.loadConfig("address", "NginxWebAddress")
+        SetupAddress = LoadConfig.loadConfig("file_address", "NginxWebAddress")
     elif mes == 'Face_Mosquitto':
-        SetupAddress = LoadConfig.loadConfig("address", "MosquittoAddress")
+        SetupAddress = LoadConfig.loadConfig("file_address", "MosquittoAddress")
 
     btn = Menubutton(tk, text=text, anchor='w', height=1, relief=FLAT, activeforeground="blue")
     btn.grid(row=count, column=column, sticky=W)
@@ -44,49 +44,63 @@ def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, InstallAd
     fileMenu = Menu(btn, tearoff=False)
 
     # 启动服务
-    fileMenu.add_radiobutton(label=START, command=lambda: btnStart(mes))
+    fileMenu.add_command(label=START, command=lambda: btnStart(mes))
 
     def btnStart(mes):
         ServiceOpt.ServiceStart(mes)
+        fileMenu.entryconfig(START, state=DISABLED)
 
     # 停止服务
-    fileMenu.add_radiobutton(label=STOP, command=lambda: btnStop(mes))
+    fileMenu.add_command(label=STOP, command=lambda: btnStop(mes))
 
     def btnStop(mes):
         ServiceOpt.ServiceStop(mes)
+        fileMenu.entryconfig(STOP, state=DISABLED)
 
     # 重启服务
-    fileMenu.add_radiobutton(label=RE_START, command=lambda: ServiceOpt.ServiceReStart(mes))
+    fileMenu.add_command(label=RE_START, command=lambda: btnReStart(mes))
+
+    def btnReStart(mes):
+        ServiceOpt.ServiceReStart(mes)
+        fileMenu.entryconfig(RE_START, state=DISABLED)
 
     fileMenu.add_separator()
 
     # 打开服务日志
-    fileMenu.add_radiobutton(label=LOG_FILE, command=lambda: ServiceOpt.openNoteByName(LogAddress, LogFile))
+    fileMenu.add_command(label=LOG_FILE, command=lambda: btnLogFile(LogAddress, LogFile))
+
+    def btnLogFile(LogAddress, LogFile):
+        ServiceOpt.openNoteByName(LogAddress, LogFile)
+        fileMenu.entryconfig(LOG_FILE, state=DISABLED)
 
     fileMenu.add_separator()
 
     # 打开服务自启
-    fileMenu.add_radiobutton(label=SET_START_AUTO, command=lambda: ServiceOpt.ServiceSetStartAuto(mes, "auto"))
+    fileMenu.add_command(label=SET_START_AUTO, command=lambda: btnSetState(mes, SET_START_AUTO, "auto"))
     # 关闭服务自启
-    fileMenu.add_radiobutton(label=SET_START_DEMAND,
-                             command=lambda: ServiceOpt.ServiceSetStartAuto(mes, "demand"))
+    fileMenu.add_command(label=SET_START_DEMAND, command=lambda: btnSetState(mes, SET_START_DEMAND, "demand"))
     # 禁用服务
-    fileMenu.add_radiobutton(label=SET_START_DISABLED,
-                             command=lambda: ServiceOpt.ServiceSetStartAuto(mes, "disabled"))
+    fileMenu.add_command(label=SET_START_DISABLED, command=lambda: btnSetState(mes, SET_START_DISABLED, "disabled"))
+
+    def btnSetState(mes, label, STATE):
+        ServiceOpt.ServiceSetStartAuto(mes, STATE)
+        fileMenu.entryconfig(label, state=DISABLED)
 
     fileMenu.add_separator()
 
     # 安装服务
-    fileMenu.add_radiobutton(label=INSATLL, command=lambda: btnSetup(SetupAddress, mes))
+    fileMenu.add_command(label=INSTALL, command=lambda: btnSetup(SetupAddress, mes))
 
     def btnSetup(SetupAddress, mes):
         ServiceOpt.openSetup(SetupAddress, mes)
+        fileMenu.entryconfig(INSTALL, state=DISABLED)
 
     # 卸载服务
-    fileMenu.add_radiobutton(label=UNINSTALL, command=lambda: btnDelete(mes))
+    fileMenu.add_command(label=UNINSTALL, command=lambda: btnDelete(mes))
 
     def btnDelete(mes):
         ServiceOpt.ServiceDelete(mes)
+        fileMenu.entryconfig(UNINSTALL, state=DISABLED)
 
     if LogFile == '':
         fileMenu.entryconfig(LOG_FILE, state=DISABLED)
@@ -96,10 +110,10 @@ def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, InstallAd
             fileMenu.entryconfig(index, state=DISABLED)
     elif FLAG == 0:
         fileMenu.entryconfig(STOP, state=DISABLED)
-        fileMenu.entryconfig(INSATLL, state=DISABLED)
+        fileMenu.entryconfig(INSTALL, state=DISABLED)
     elif FLAG == 1:
         fileMenu.entryconfig(START, state=DISABLED)
-        fileMenu.entryconfig(INSATLL, state=DISABLED)
+        fileMenu.entryconfig(INSTALL, state=DISABLED)
 
     btn.config(menu=fileMenu)
 

@@ -17,7 +17,7 @@ def loadConfig(name, key):
 
 
 def loadNameList():
-    file = open(loadConfig("address", "NameListAddress"), encoding="utf-8-sig")
+    file = open(loadConfig("file_address", "NameListAddress"), encoding="utf-8-sig")
     ServiceNameList = []
     result = file.readlines()
     for count in range(len(result)):
