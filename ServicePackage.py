@@ -4,12 +4,9 @@
 
 __author__ = 'RollingBear'
 
-from tkinter import *
 import ServiceOpt
 import printComp
-import configparser
 import time
-import threading
 
 '''名称'''
 STATE_RUNNING = "已启动"
@@ -19,39 +16,20 @@ STATE_UNINSTALLED = "未安装"
 '''按钮服务'''
 
 
-def ServiceAllStart(tk, ServiceNameList):
-    for count in range(int(len(ServiceNameList) / 2)):
-        ServiceOpt.ServiceStart(ServiceNameList[int(count * 2)])
-        # ServiceState(tk, count, 3, 1, ServiceNameList[int(count * 2)])
+def ServiceAllStart(ServiceNameList):
+    for count in range(int(len(ServiceNameList) / 3)):
+        ServiceOpt.ServiceStart(ServiceNameList[int(count * 3)])
 
 
-def ServiceAllStop(tk, ServiceNameList):
-    for count in range(int(len(ServiceNameList) / 2)):
-        ServiceOpt.ServiceStop(ServiceNameList[int(count * 2)])
-        # ServiceState(tk, count, 3, 1, ServiceNameList[int(count * 2)])
+def ServiceAllStop(ServiceNameList):
+    for count in range(int(len(ServiceNameList) / 3)):
+        ServiceOpt.ServiceStop(ServiceNameList[int(count * 3)])
 
 
 def openFileList(Address):
     ServiceOpt.openFile(Address)
 
 
-'''加载服务状态'''
-
-#
-# def ServiceState(tk, count, column, columnspan, ServiceName):
-#     FLAG = ServiceOpt.getServiceState(ServiceName)
-#     if FLAG == 1:
-#         printComp.printPNG(GREEN, count, column, columnspan)
-#         printComp.printLabel(tk, STATE_RUNNING, count, column + 1, columnspan)
-#         return True
-#     elif FLAG == 0:
-#         printComp.printPNG(RED, count, column, columnspan)
-#         printComp.printLabel(tk, STATE_STOPPED, count, column + 1, columnspan)
-#         return True
-#     elif FLAG == -1:
-#         printComp.printPNG(YELLOW, count, column, columnspan)
-#         printComp.printLabel(tk, STATE_UNINSTALLED, count, column + 1, columnspan)
-#         return False
 '''状态刷新'''
 
 
@@ -69,10 +47,26 @@ def StateReFresh(tk, ServiceNameList, GREEN, RED, YELLOW):
             printComp.printLabel(tk, STATE_UNINSTALLED, count, 4, 1)
 
 
-def ReFreshThreading(tk, ServiceNameList, delay, GREEN, RED, YELLOW):
+def ButtonMenuReFresh(tk, ServiceNameList, LogListAddress, SetupAddress):
+    for count in range(int(len(ServiceNameList) / 3)):
+        printComp.printMenuButton(tk, ServiceNameList[int(count * 3 + 1)], ServiceNameList[int(count * 3)],
+                                  count, 1,
+                                  LogListAddress, ServiceNameList[int(count * 3 + 2)], SetupAddress)
+
+
+def ReFreshStateThreading(tk, ServiceNameList, delay, GREEN, RED, YELLOW):
     while True:
         try:
             StateReFresh(tk, ServiceNameList, GREEN, RED, YELLOW)
         finally:
-            print("run refresh")
+            print("state refresh")
+        time.sleep(delay)
+
+
+def ReFreshBtnMThreading(tk, ServiceNameList, LogListAddress, SetupAddress, delay):
+    while True:
+        try:
+            ButtonMenuReFresh(tk, ServiceNameList, LogListAddress, SetupAddress)
+        finally:
+            print('Button Menu refresh')
         time.sleep(delay)

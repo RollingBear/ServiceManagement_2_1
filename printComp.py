@@ -7,6 +7,8 @@ __author__ = 'RollingBear'
 from tkinter import *
 import ServiceOpt
 import ServicePackage
+import LoadConfig
+import time
 
 '''名称'''
 START = "启动"
@@ -23,65 +25,81 @@ START_ALL = "全部启动"
 STOP_ALL = "全部停止"
 LOG_LIST = "日志目录"
 
+'''添加下拉菜单'''
 
 
-def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, SetupAddress):
+def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, InstallAddress):
+    FLAG = ServiceOpt.getServiceState(mes)
+
+    # 判断地址
+    SetupAddress = InstallAddress
+    if InstallAddress == 'Face_Nginx':
+        SetupAddress = LoadConfig.loadConfig("address", "NginxWebAddress")
+    elif InstallAddress == 'Face_Mosquitto':
+        SetupAddress = LoadConfig.loadConfig("address", "MosquittoAddress")
+
     btn = Menubutton(tk, text=text, anchor='w', height=1, relief=FLAT, activeforeground="blue")
     btn.grid(row=count, column=column, sticky=W)
+
     fileMenu = Menu(btn, tearoff=False)
-    FLAG = ServiceOpt.getServiceState(mes)
-    fileMenu.add_radiobutton(label=START, value=1, command=lambda: btnStart(mes))
-    if FLAG == -1:
-        fileMenu.entryconfig(1, state=DISABLED)
-    if FLAG == 1:
-        fileMenu.entryconfig(1, state=DISABLED)
+
+    # 启动服务
+    fileMenu.add_radiobutton(label=START, command=lambda: btnStart(mes))
 
     def btnStart(mes):
         ServiceOpt.ServiceStart(mes)
-        printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, SetupAddress)
 
-    fileMenu.add_radiobutton(label=STOP, value=2, command=lambda: btnStop(mes))
-    if FLAG == -1:
-        fileMenu.entryconfig(2, state=DISABLED)
-    if FLAG == 0:
-        fileMenu.entryconfig(2, state=DISABLED)
+    # 停止服务
+    fileMenu.add_radiobutton(label=STOP, command=lambda: btnStop(mes))
 
     def btnStop(mes):
         ServiceOpt.ServiceStop(mes)
-        printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, SetupAddress)
 
-    fileMenu.add_radiobutton(label=RE_START, value=3, command=lambda: ServiceOpt.ServiceReStart(mes))
-    if FLAG == -1:
-        fileMenu.entryconfig(3, state=DISABLED)
-    fileMenu.add_radiobutton(label=LOG_FILE, value=4, command=lambda: ServiceOpt.openNoteByName(LogAddress, LogFile))
-    if LogFile == '':
-        fileMenu.entryconfig(4, state=DISABLED)
-    fileMenu.add_radiobutton(label=SET_START_AUTO, value=5, command=lambda: ServiceOpt.ServiceSetStartAuto(mes, "auto"))
-    if FLAG == -1:
-        fileMenu.entryconfig(5, state=DISABLED)
-    fileMenu.add_radiobutton(label=SET_START_DEMAND, value=6,
+    # 重启服务
+    fileMenu.add_radiobutton(label=RE_START, command=lambda: ServiceOpt.ServiceReStart(mes))
+
+    fileMenu.add_separator()
+
+    # 打开服务日志
+    fileMenu.add_radiobutton(label=LOG_FILE, command=lambda: ServiceOpt.openNoteByName(LogAddress, LogFile))
+
+    fileMenu.add_separator()
+
+    # 打开服务自启
+    fileMenu.add_radiobutton(label=SET_START_AUTO, command=lambda: ServiceOpt.ServiceSetStartAuto(mes, "auto"))
+    # 关闭服务自启
+    fileMenu.add_radiobutton(label=SET_START_DEMAND,
                              command=lambda: ServiceOpt.ServiceSetStartAuto(mes, "demand"))
-    if FLAG == -1:
-        fileMenu.entryconfig(6, state=DISABLED)
-    fileMenu.add_radiobutton(label=SET_START_DISABLED, value=7,
+    # 禁用服务
+    fileMenu.add_radiobutton(label=SET_START_DISABLED,
                              command=lambda: ServiceOpt.ServiceSetStartAuto(mes, "disabled"))
-    if FLAG == -1:
-        fileMenu.entryconfig(7, state=DISABLED)
-    fileMenu.add_radiobutton(label=INSATLL, value=8, command=lambda: btnSetup(SetupAddress, mes))
-    if FLAG != -1:
-        fileMenu.entryconfig(8, state=DISABLED)
+
+    fileMenu.add_separator()
+
+    # 安装服务
+    fileMenu.add_radiobutton(label=INSATLL, command=lambda: btnSetup(SetupAddress, mes))
 
     def btnSetup(SetupAddress, mes):
         ServiceOpt.openSetup(SetupAddress, mes)
-        printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, SetupAddress)
 
-    fileMenu.add_radiobutton(label=UNINSTALL, value=9, command=lambda: btnDelete(mes))
-    if FLAG == -1:
-        fileMenu.entryconfig(9, state=DISABLED)
+    # 卸载服务
+    fileMenu.add_radiobutton(label=UNINSTALL, command=lambda: btnDelete(mes))
 
     def btnDelete(mes):
         ServiceOpt.ServiceDelete(mes)
-        printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, SetupAddress)
+
+    if LogFile == '':
+        fileMenu.entryconfig(LOG_FILE, state=DISABLED)
+
+    if FLAG == -1:
+        for index in [START, STOP, RE_START, SET_START_AUTO, SET_START_DEMAND, SET_START_DISABLED, UNINSTALL]:
+            fileMenu.entryconfig(index, state=DISABLED)
+    elif FLAG == 0:
+        fileMenu.entryconfig(STOP, state=DISABLED)
+        fileMenu.entryconfig(INSATLL, state=DISABLED)
+    elif FLAG == 1:
+        fileMenu.entryconfig(START, state=DISABLED)
+        fileMenu.entryconfig(INSATLL, state=DISABLED)
 
     btn.config(menu=fileMenu)
 
@@ -89,14 +107,11 @@ def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, SetupAddr
 def printButton(tk, text, mes, row, column, columnspan, Address):
     if text == START_ALL:
         btn = Button(tk, text=text, width=8, height=1, activeforeground="blue",
-                     command=lambda tk=tk, List=mes: ServicePackage.ServiceAllStart(tk, List))
+                     command=lambda tk=tk, List=mes: ServicePackage.ServiceAllStart(List))
     elif text == STOP_ALL:
         btn = Button(tk, text=text, width=8, height=1, activeforeground="blue",
-                     command=lambda tk=tk, List=mes: ServicePackage.ServiceAllStop(tk, List))
+                     command=lambda tk=tk, List=mes: ServicePackage.ServiceAllStop(List))
     elif text == LOG_LIST:
-        btn = Button(tk, text=text, width=8, height=1, activeforeground="blue",
-                     command=lambda: ServicePackage.openFileList(Address))
-    elif text == INSTALL_LIST:
         btn = Button(tk, text=text, width=8, height=1, activeforeground="blue",
                      command=lambda: ServicePackage.openFileList(Address))
     btn.grid(row=row, column=column, columnspan=columnspan)
