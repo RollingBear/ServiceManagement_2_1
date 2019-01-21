@@ -33,9 +33,9 @@ def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, InstallAd
 
     # 判断地址
     SetupAddress = InstallAddress
-    if InstallAddress == 'Face_Nginx':
+    if mes == 'Face_Nginx':
         SetupAddress = LoadConfig.loadConfig("address", "NginxWebAddress")
-    elif InstallAddress == 'Face_Mosquitto':
+    elif mes == 'Face_Mosquitto':
         SetupAddress = LoadConfig.loadConfig("address", "MosquittoAddress")
 
     btn = Menubutton(tk, text=text, anchor='w', height=1, relief=FLAT, activeforeground="blue")

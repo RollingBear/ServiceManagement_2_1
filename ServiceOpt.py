@@ -97,7 +97,7 @@ def openSetup(SetupAddress, ServiceName):
         os.popen("sc create " + ServiceName + ' binPath="' + os.path.abspath(
             os.path.dirname(os.getcwd()) + os.path.sep + (
                     "." * SetupAddress.count("..\\"))) + "\\" + SetupAddress.replace("..\\",
-                                                                                     "") + "\\" + ServiceName(
+                                                                                     "") + "\\" + ServiceName.replace(
             'Face_N', 'WinSW_n') + '.exe"')
     else:
         os.popen("sc create " + ServiceName + ' binPath="' + os.path.abspath(
