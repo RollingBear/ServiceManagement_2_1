@@ -8,7 +8,6 @@ from tkinter import *
 import ServiceOpt
 import ServicePackage
 import LoadConfig
-import time
 
 '''名称'''
 START = "启动"
@@ -24,6 +23,13 @@ LOG_LIST = "日志目录"
 START_ALL = "全部启动"
 STOP_ALL = "全部停止"
 LOG_LIST = "日志目录"
+
+'''状态'''
+STATE_STARTING = "正在启动"
+STATE_RE_STARTING = "正在重启"
+STATE_STOPPING = "正在停止"
+STATE_INSTALLING = "正在安装"
+STATE_UNINSTALLING = "正在卸载"
 
 '''添加下拉菜单'''
 
@@ -49,6 +55,7 @@ def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, InstallAd
     def btnStart(mes):
         ServiceOpt.ServiceStart(mes)
         fileMenu.entryconfig(START, state=DISABLED)
+        printLabel(tk, STATE_STARTING, count, 4, 1)
 
     # 停止服务
     fileMenu.add_command(label=STOP, command=lambda: btnStop(mes))
@@ -56,6 +63,7 @@ def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, InstallAd
     def btnStop(mes):
         ServiceOpt.ServiceStop(mes)
         fileMenu.entryconfig(STOP, state=DISABLED)
+        printLabel(tk, STATE_STOPPING, count, 4, 1)
 
     # 重启服务
     fileMenu.add_command(label=RE_START, command=lambda: btnReStart(mes))
@@ -63,6 +71,7 @@ def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, InstallAd
     def btnReStart(mes):
         ServiceOpt.ServiceReStart(mes)
         fileMenu.entryconfig(RE_START, state=DISABLED)
+        printLabel(tk, STATE_RE_STARTING, count, 4, 1)
 
     fileMenu.add_separator()
 
@@ -94,6 +103,7 @@ def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, InstallAd
     def btnSetup(SetupAddress, mes):
         ServiceOpt.openSetup(SetupAddress, mes)
         fileMenu.entryconfig(INSTALL, state=DISABLED)
+        printLabel(tk, STATE_INSTALLING, count, 4, 1)
 
     # 卸载服务
     fileMenu.add_command(label=UNINSTALL, command=lambda: btnDelete(mes))
@@ -101,6 +111,7 @@ def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, InstallAd
     def btnDelete(mes):
         ServiceOpt.ServiceDelete(mes)
         fileMenu.entryconfig(UNINSTALL, state=DISABLED)
+        printLabel(tk, STATE_UNINSTALLING, count, 4, 1)
 
     if LogFile == '':
         fileMenu.entryconfig(LOG_FILE, state=DISABLED)
@@ -108,10 +119,10 @@ def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, InstallAd
     if FLAG == -1:
         for index in [START, STOP, RE_START, SET_START_AUTO, SET_START_DEMAND, SET_START_DISABLED, UNINSTALL]:
             fileMenu.entryconfig(index, state=DISABLED)
-    elif FLAG == 0:
+    elif (FLAG == 0) or (FLAG == 1):
         fileMenu.entryconfig(STOP, state=DISABLED)
         fileMenu.entryconfig(INSTALL, state=DISABLED)
-    elif FLAG == 1:
+    elif (FLAG == 2) or (FLAG == 3):
         fileMenu.entryconfig(START, state=DISABLED)
         fileMenu.entryconfig(INSTALL, state=DISABLED)
 

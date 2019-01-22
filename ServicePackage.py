@@ -9,9 +9,9 @@ import printComp
 import time
 
 '''名称'''
-STATE_RUNNING = "已启动"
-STATE_STOPPED = "未启动"
-STATE_UNINSTALLED = "未安装"
+STATE_RUNNING = "已启动  "
+STATE_STOPPED = "未启动  "
+STATE_UNINSTALLED = "未安装  "
 
 '''按钮服务'''
 
@@ -36,6 +36,7 @@ def openFileList(Address):
 def StateReFresh(tk, ServiceNameList, GREEN, RED, YELLOW):
     for count in range(int(len(ServiceNameList) / 3)):
         FLAG = ServiceOpt.getServiceState(ServiceNameList[int(count * 3)])
+
         if FLAG == 1:
             printComp.printPNG(GREEN, count, 3, 1)
             printComp.printLabel(tk, STATE_RUNNING, count, 4, 1)
