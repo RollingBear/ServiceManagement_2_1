@@ -119,10 +119,10 @@ def printMenuButton(tk, text, mes, count, column, LogAddress, LogFile, InstallAd
     if FLAG == -1:
         for index in [START, STOP, RE_START, SET_START_AUTO, SET_START_DEMAND, SET_START_DISABLED, UNINSTALL]:
             fileMenu.entryconfig(index, state=DISABLED)
-    elif (FLAG == 0) or (FLAG == 1):
+    elif FLAG == 0:
         fileMenu.entryconfig(STOP, state=DISABLED)
         fileMenu.entryconfig(INSTALL, state=DISABLED)
-    elif (FLAG == 2) or (FLAG == 3):
+    elif FLAG == 1:
         fileMenu.entryconfig(START, state=DISABLED)
         fileMenu.entryconfig(INSTALL, state=DISABLED)
 
